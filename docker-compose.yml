@@ -1,0 +1,23 @@
+services:
+  rbac-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rbac-secure-rest-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - RBACAPI_SECRET_KEY=production-change-this-ultra-secure-key-32-chars
+      - RBACAPI_JWT_ALGORITHM=HS256
+      - RBACAPI_DB_PATH=/app/data/rbacapi.db
+      - RBACAPI_RATE_LIMIT_REQUESTS=100
+    volumes:
+      - rbac_data:/app/data
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  rbac_data:

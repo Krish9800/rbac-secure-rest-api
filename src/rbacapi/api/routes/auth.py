@@ -7,12 +7,13 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel
 
 from rbacapi.api.dependencies import (
+    get_app_settings,
     get_audit_ledger,
     get_current_user,
     get_db,
 )
 from rbacapi.audit.hash_chain import AuditLedger
-from rbacapi.config.settings import settings
+from rbacapi.config.settings import Settings, settings
 from rbacapi.core.exceptions import InvalidTokenError
 from rbacapi.core.security import verify_password, verify_totp_code
 from rbacapi.core.tokens import (
@@ -67,6 +68,7 @@ def login(
     request: Request,
     db: Annotated[DatabaseManager, Depends(get_db)],
     audit_ledger: Annotated[AuditLedger, Depends(get_audit_ledger)],
+    app_settings: Annotated[Settings, Depends(get_app_settings)],
 ) -> Any:
     """Authenticate with username and password, returning tokens or MFA challenge."""
     client_ip = request.client.host if request.client else "127.0.0.1"
@@ -101,10 +103,10 @@ def login(
     if not verify_password(req.password, user.password_hash):
         user.failed_login_attempts += 1
         locked = False
-        if user.failed_login_attempts >= settings.max_failed_logins:
+        if user.failed_login_attempts >= app_settings.max_failed_logins:
             user.status = UserStatus.LOCKED
             user.locked_until = datetime.now(UTC) + timedelta(
-                seconds=settings.lockout_duration_seconds
+                seconds=app_settings.lockout_duration_seconds
             )
             locked = True
 

@@ -8,6 +8,7 @@ from fastapi import Depends, Header, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from rbacapi.audit.hash_chain import AuditLedger
+from rbacapi.config.settings import Settings
 from rbacapi.core.exceptions import InvalidTokenError
 from rbacapi.core.tokens import TokenPayload, decode_access_token
 from rbacapi.db.database import DatabaseManager
@@ -30,6 +31,12 @@ def get_db(request: Request) -> DatabaseManager:
     """Retrieve application database manager from state."""
     db: DatabaseManager = request.app.state.db
     return db
+
+
+def get_app_settings(request: Request) -> Settings:
+    """Retrieve application settings from state."""
+    app_settings: Settings = request.app.state.settings
+    return app_settings
 
 
 def get_audit_ledger(request: Request) -> AuditLedger:
