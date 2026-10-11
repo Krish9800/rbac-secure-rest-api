@@ -37,5 +37,12 @@ class Settings(BaseSettings):
     # Multi-factor authentication
     mfa_issuer: str = "RBAC-Secure-API"
 
+    # Security headers & CORS
+    cors_origins: list[str] = ["*"]
+    content_security_policy: str = "default-src 'none'; frame-ancestors 'none';"
+    enable_hsts: bool = True
+    app_name: str = "RBAC Secure REST API"
+    environment: str = "production"
+
 
 settings = Settings()

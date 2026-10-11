@@ -102,9 +102,10 @@ class DatabaseManager:
                 admin_perms = conn.execute(
                     """
                     SELECT permission_id FROM permissions
-                    WHERE resource IN ('USERS', 'ROLES', 'REPORTS', 'SYSTEM_CONFIG')
+                    WHERE resource IN ('USERS', 'ROLES', 'REPORTS', 'SYSTEM_CONFIG', 'AUDIT_LOGS')
                     """
                 ).fetchall()
+
                 for p in admin_perms:
                     conn.execute(
                         """
