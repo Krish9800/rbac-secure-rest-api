@@ -43,4 +43,4 @@ jobs:
 
       - name: Test Suite with Coverage Gate (Pytest >= 90%)
         run: |
-          pytest --cov=src/rbacapi --cov-report=term-missing --cov-fail-under=90
+          pytest --cov=rbacapi --cov-report=term-missing --cov-fail-under=90
